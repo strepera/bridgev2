@@ -7,7 +7,7 @@ Data.init();
 
 const clients = {};
 
-const onlinePlayers = new Set();
+let onlinePlayers = [];
 
 wss.on('connection', (ws, req) => {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -74,15 +74,15 @@ class Client {
 
                 case "playerListChange":
                     console.log(json.player + ' ' + (json.difference > 0? 'joined' : 'left'));
+                    json.players.forEach(player => onlinePlayers.push(player));
+                    onlinePlayers = onlinePlayers.filter((name, index) => onlinePlayers.filter(n => n == name).length == 1 || onlinePlayers.indexOf(name) == index);
                     Object.entries(clients).forEach((arr) => {
                         if (arr[1].guild == this.guild) return;
-                        let newList = json.players;
-                        onlinePlayers.forEach(player => newList.push(player));
                         arr[1].ws.send(JSON.stringify({
                             type: 'playerListChange',
                             difference: json.difference,
                             player: json.player,
-                            players: newList,
+                            players: onlinePlayers,
                             guild: this.guild
                         }));
                     })

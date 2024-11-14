@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from 'fs';
 
 const ranRange = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -9,7 +9,7 @@ const Data = {
     playerData: {},
     stockPrices: {},
 
-    _checkPlayerExists: (name) => {
+    _checkPlayerExists: (playerName) => {
         if (!Data.playerData[playerName.toLowerCase()]) {
             Data.playerData[playerName.toLowerCase()] = {
                 username: playerName,
@@ -21,16 +21,16 @@ const Data = {
     },
 
     init: async () => {
-        Data.playerData = await fs.readFile('./player_data.json');
-        Data.stockPrices = await fs.readFile('./stock_prices.json');
+        Data.playerData = JSON.parse((await fs.promises.readFile('./player_data.json')).toString());
+        Data.stockPrices = JSON.parse((await fs.promises.readFile('./stock_prices.json')).toString());
         setInterval(() => {
-            fs.writeFile('./player_data.json', JSON.stringify(Data.playerData));
-            fs.writeFile('./player_data.json', JSON.stringify(Data.stockPrices));
+            fs.writeFileSync('./player_data.json', JSON.stringify(Data.playerData));
+            fs.writeFileSync('./player_data.json', JSON.stringify(Data.stockPrices));
         }, 2*60*1000);
         setInterval(() => {
             for (const stock in Data.stockPrices) {
-                const difference = Data.stockPrices[stock].value / 100 * ranRange(-5.3, 5.5);
-                Data.stockPrices[stock].value = Math.floor(Data.stockPrices[stock].value + difference);
+                const difference = Data.stockPrices[stock].price / 100 * ranRange(-5.3, 5.5);
+                Data.stockPrices[stock].price = Math.floor(Data.stockPrices[stock].price + difference);
             }
         }, 60*60*1000);
     },

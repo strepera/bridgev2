@@ -1,42 +1,47 @@
 import mineflayer from 'mineflayer';
 import WebSocket from 'ws';
 
-export const makeMineflayerBot = (username, guild) => {
+export const makeMineflayerBot = (username, guild, login) => {
 
     let readingGuildOnlineMessage = false;
     let onlineMessageArray = [];
 
-    const players = [];
+    let players = [];
 
-    let ws = new WebSocket('ws://192.168.1.114:3000');
+    let ws = new WebSocket('ws://192.168.1.110:3000');
     
-    ws.on('open', () => {
-        console.log('connected!');
-        ws.send(JSON.stringify({
-            type: 'init',
-            guild: guild,
-            username: username
-        }))
-    })
-
-    ws.on('close', (code, reason) => {
-        console.error(code + ' ' + reason);
-    })
+    const connect = () => {
+        ws = new WebSocket('ws://192.168.1.110:3000');
+        ws.on('open', () => {
+            console.log('connected!');
+            ws.send(JSON.stringify({
+                type: 'init',
+                guild: guild,
+                username: username
+            }))
+        })
     
-    ws.on('message', (data) => {
-        const json = JSON.parse(data);
-        switch (json.type) {
-            case "chat":
-                bot.chat("/gc " + json.player + " : " + json.message);
-                break;
-            default:
-                break;
-        }
-    })
+        ws.on('close', (code, reason) => {
+            console.error(code + ' ' + reason);
+            setTimeout(connect, 30*1000);
+        })
+        
+        ws.on('message', (data) => {
+            const json = JSON.parse(data);
+            switch (json.type) {
+                case "chat":
+                    bot.chat("/gc " + json.player + " : " + json.message);
+                    break;
+                default:
+                    break;
+            }
+        })
+    }
+    connect();
 
     const bot = mineflayer.createBot({
         host: "mc.hypixel.net",
-        username: username,
+        username: login,
         auth: "microsoft",
         port: "25565",
         version: "1.20"
