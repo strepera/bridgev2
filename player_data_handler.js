@@ -6,9 +6,12 @@ const ranRange = (min, max) => {
 
 const Data = {
 
+    playerData: {},
+    stockPrices: {},
+
     _checkPlayerExists: (name) => {
-        if (!this.playerData[playerName.toLowerCase()]) {
-            this.playerData[playerName.toLowerCase()] = {
+        if (!Data.playerData[playerName.toLowerCase()]) {
+            Data.playerData[playerName.toLowerCase()] = {
                 username: playerName,
                 coins: 0,
                 messages: 0,
@@ -18,23 +21,23 @@ const Data = {
     },
 
     init: async () => {
-        this.playerData = await fs.readFile('./player_data.json');
-        this.stockPrices = await fs.readFile('./stock_prices.json');
+        Data.playerData = await fs.readFile('./player_data.json');
+        Data.stockPrices = await fs.readFile('./stock_prices.json');
         setInterval(() => {
-            fs.writeFile('./player_data.json', JSON.stringify(this.playerData));
-            fs.writeFile('./player_data.json', JSON.stringify(this.stockPrices));
+            fs.writeFile('./player_data.json', JSON.stringify(Data.playerData));
+            fs.writeFile('./player_data.json', JSON.stringify(Data.stockPrices));
         }, 2*60*1000);
         setInterval(() => {
-            for (const stock in this.stockPrices) {
-                const difference = this.stockPrices[stock].value / 100 * ranRange(-5.3, 5.5);
-                this.stockPrices[stock].value = Math.floor(this.stockPrices[stock].value + difference);
+            for (const stock in Data.stockPrices) {
+                const difference = Data.stockPrices[stock].value / 100 * ranRange(-5.3, 5.5);
+                Data.stockPrices[stock].value = Math.floor(Data.stockPrices[stock].value + difference);
             }
         }, 60*60*1000);
     },
 
     get: (playerName) => {
         _checkPlayerExists(playerName);
-        return this.playerData[playerName?.toLowerCase()];
+        return Data.playerData[playerName?.toLowerCase()];
     },
 
     add: (playerName, type, amount, stockType) => {
@@ -43,25 +46,25 @@ const Data = {
 
         switch (type) {
             case "coins":
-                this.playerData[playerName.toLowerCase()].coins += amount;
+                Data.playerData[playerName.toLowerCase()].coins += amount;
                 break;
             case "messages":
-                this.playerData[playerName.toLowerCase()].messages += amount;
+                Data.playerData[playerName.toLowerCase()].messages += amount;
                 break;
             case "stocks":
-                if (!this.stockPrices[stockType].ownership[player.toLowerCase()]) this.stockPrices[stockType].ownership[player.toLowerCase()] = 0;
-                this.stockPrices[stockType].ownership[player.toLowerCase()] += amount;
+                if (!Data.stockPrices[stockType].ownership[player.toLowerCase()]) Data.stockPrices[stockType].ownership[player.toLowerCase()] = 0;
+                Data.stockPrices[stockType].ownership[player.toLowerCase()] += amount;
                 break;
             default: 
                 throw new Error('Invalid player data type received');
         }
 
-        return this.playerData[playerName];
+        return Data.playerData[playerName];
 
     },
 
     getStocks: () => {
-        return this.stockPrices;
+        return Data.stockPrices;
     }
 }
 
