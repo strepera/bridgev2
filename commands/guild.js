@@ -1,13 +1,13 @@
 export default async function getGuildData(bot, requestedPlayer, playerExecuted, chat) {
     let level = 0;
     requestedPlayer = requestedPlayer.replaceAll(' ', '%20');
-    const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${requestedPlayer}`);
+    const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.API_KEY}&name=${requestedPlayer}`);
     const json = await response.json();
     if (json.guild == null) {
         const response0 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
         const json0 = await response0.json();
         const uuid = json0.id;
-        const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&player=${uuid}`);
+        const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.API_KEY}&player=${uuid}`);
         const json = await response.json();
         if (json.success != true) {
             return (chat + 'Invalid guild/player');

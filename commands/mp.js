@@ -7,7 +7,7 @@ export default async function(bot, requestedPlayer, player, chat) {
   requestedPlayer = json0.name;
 
   let profileName;
-  const response1 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`)
+  const response1 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.API_KEY}&uuid=${uuid}`)
   const json1 = await response1.json();
   if (json1.success == true) {
       for (let profile of json1.profiles) {

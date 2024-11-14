@@ -94,7 +94,7 @@ export default async function(bot, requestedPlayer, player, chat, match) {
     uuid = json1.id;
     requestedPlayer = json1.name;
     try {
-      const response1 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
+      const response1 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.API_KEY}&uuid=${uuid}`);
       const json1 = await response1.json();
       if (json1.success === true && json1.profiles !== null) {
         let completionBonus;
@@ -176,7 +176,7 @@ export default async function(bot, requestedPlayer, player, chat, match) {
           return (`${chat}${requestedPlayer} needs ${requiredFloors} ${requestedFloor} runs to get from cata ${cataLevel} to ${requestedLevel}.`);
         }
         else {
-        const response2 = await fetch(`https://api.hypixel.net/v2/player?key=${process.env.apiKey}&uuid=${uuid}`);
+        const response2 = await fetch(`https://api.hypixel.net/v2/player?key=${process.env.API_KEY}&uuid=${uuid}`);
         const json2 = await response2.json();
         let totalSecretsFound = json2.success === true && json2.profiles !== null ? json2.player.achievements.skyblock_treasure_hunter : 0;
         return (`${chat}${requestedPlayer} ⚔${cataLevel}, ${secretsFound} secrets. [${totalSecretsFound} total]`);

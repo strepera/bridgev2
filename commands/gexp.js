@@ -9,7 +9,7 @@ export default async function(bot, requestedPlayer, player, chat) {
   if (!uuid) {
     return (chat + "Invalid player.");
   }
-  const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&player=${uuid}`);
+  const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.API_KEY}&player=${uuid}`);
   const json = await response.json();
   if (!json.success || !json.guild) {
     return (chat + "Invalid player.");

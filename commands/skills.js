@@ -63,7 +63,7 @@ export default async function(bot, requestedPlayer, player, chat) {
   const json1 = await response1.json();
   let uuid = json1.id;
   requestedPlayer = json1.name;
-  const response2 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
+  const response2 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.API_KEY}&uuid=${uuid}`);
   const json2 = await response2.json();
   if (json2.success == true) {
     skillStarted = true;

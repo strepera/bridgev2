@@ -54,8 +54,8 @@ export const makeMineflayerBot = (username, guild) => {
         let match2;
         if (match = msg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
             if (match[2] == bot.username) return;
-            if (match2 = match[4].match(/\.(\S+)( .+)?/)) {
-                let args = match2[2]?.slice(1);
+            if (match2 = match[4].match(/^\.(\S+)(?: (.+))?/)) {
+                let args = match2[2];
                 if (!args) args = match[2];
                 ws.send(JSON.stringify({
                     type: 'command',

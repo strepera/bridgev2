@@ -1,12 +1,10 @@
 export default function help(bot, request, player, chatType) {
   request = request.split(' ')[0];
   const messages = {
-    "1": (chatType + "8ball ai bedtime bingo cata cf class coinflip contest coop cosmetics dice discord pay essence event fetchur firesale fish fps gexp guild harp hotm help"),
-    "2": (chatType + "info jacob joke leaderboard lbin math mayor mp networth online patchnotes players pristine profile random skills slayer speeds timer top uuid wiki"),
+    "1": (chatType + "8ball bingo cata cf class coinflip contest coop cosmetics dice discord pay essence event fetchur firesale fish fps gexp guild harp hotm help"),
+    "2": (chatType + "info jacob joke leaderboard lbin math mayor mp networth online patchnotes players pristine profile skills slayer speeds timer top uuid wiki"),
     "image": (chatType + "https://imgur.com/sTaVP3Z"),
     "8ball": (chatType + "Usage .8ball {question} | e.g. .8ball am i cool?"),
-    "ai": (chatType + "Usage .ai {question}"),
-    "bedtime": (chatType + "bedtime story..."),
     "bingo": (chatType + "Usage .bingo {player} | Shows player's bingo information"),
     "cata": (chatType + "Usage Use .help cata1 for cata info help, use .help cata2 for cata calc help."),
     "cata1": (chatType + "Usage .cata {player} | e.g. .cata snailify"),
@@ -43,7 +41,6 @@ export default function help(bot, request, player, chatType) {
     "players": (chatType + "Usage .players | Output | (amount of players in each skyblock island)"),
     "pristine": (chatType + "Usage .pristine (pristine) (rolls (optional)) | Sends the chance for a pristine proc with the amount of pristine and rolls"),
     "profile": (chatType + "Usage .profile {player} {profile} | e.g. .profile snailify peach"),
-    "random": (chatType + "Usage .random {number 1-15} | Output | (that many guild users)"),
     "skills": (chatType + "Usage .skills {player} {profile} | e.g. .skills snailify peach"),
     "slayer": (chatType + "Usage .slayer {player} {profile} | e.g. .slayer snailify peach"),
     "speeds": (chatType + "Usage .speeds {crop} | e.g. | .speeds wart"),

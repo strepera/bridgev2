@@ -88,7 +88,7 @@ export default async function(bot, requestedPlayer, player, chat) {
   const json1 = await response1.json();
   let uuid = json1.id;
   requestedPlayer = json1.name;
-  const response0 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
+  const response0 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.API_KEY}&uuid=${uuid}`);
   const json0 = await response0.json();
   if (json0.success == true) {
     let members;
@@ -118,12 +118,10 @@ export default async function(bot, requestedPlayer, player, chat) {
                    let isAboveHighestLevel = false;
                    for (let j in levels) {
                      if (slayerData[slayerType].xp >= levels[j]) {
-                       let originalIndex = slayerXpToLevel[slayerType].indexOf(levels[j]);
-                       let orderInNonReversedArray = slayerXpToLevel[slayerType].length - originalIndex;
-                       slayerLevel = orderInNonReversedArray;
+                       slayerLevel = slayerXpToLevel[slayerType].length-Number(j);
                        if (j == 0) {
                          isAboveHighestLevel = true;
-                         slayerLevel = `${orderInNonReversedArray} + ${formatNumber(slayerData[slayerType].xp - levels[0])}`;
+                         slayerLevel = `${slayerXpToLevel[slayerType].length} + ${formatNumber(slayerData[slayerType].xp - levels[0])}`;
                        }
                        slayerArray.push(slayerIcons[slayerType], slayerLevel);
                        break;

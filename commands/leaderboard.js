@@ -24,7 +24,7 @@ export default async function(bot, requestedPlayer, player, chatType) {
     const uuid = mojangData.id;
     requestedPlayer = mojangData.name;
 
-    const guildResponse = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&player=${uuid}`);
+    const guildResponse = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.API_KEY}&player=${uuid}`);
     const guild = await guildResponse.json();
 
     if (!guild.success || !guild.guild) {
@@ -95,7 +95,7 @@ export default async function(bot, requestedPlayer, player, chatType) {
                 guildData[guildName].levels = {};
                 chat("Please wait... Initializing level data for the first time.");
                 for (const member of guildData[guildName].members) {
-                    const response = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${member.uuid}`);
+                    const response = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.API_KEY}&uuid=${member.uuid}`);
                     const data = await response.json();
                     let profile;
                     for (const profileObj of data.profiles) {

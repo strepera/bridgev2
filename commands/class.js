@@ -66,7 +66,7 @@ export default async function(bot, requestedPlayer, player, chat) {
     const uuidJson = await uuidResponse.json();
     const uuid = uuidJson.id;
     requestedPlayer = uuidJson.name;
-    const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
+    const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.API_KEY}&uuid=${uuid}`);
     const dataJson = await dataResponse.json();
     if (!dataJson.success || !dataJson.profiles) return (chat + "Invalid player.");
     let profileData;

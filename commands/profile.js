@@ -5,7 +5,7 @@ export default async function profileCommand(bot, requestedPlayer, player, chat)
     const uuidJson = await uuidResponse.json();
     const uuid = uuidJson.id;
     requestedPlayer = uuidJson.name;
-    const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
+    const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.API_KEY}&uuid=${uuid}`);
     const dataJson = await dataResponse.json();
     if (!dataJson.success || !dataJson.profiles) return (chat + "Invalid player.");
     if (!args) {
@@ -36,7 +36,7 @@ export default async function profileCommand(bot, requestedPlayer, player, chat)
     const profileSelected = profile.selected;
     const profileData = profile.members[uuid];
     const serum = profileData.experimentation && profileData.experimentation.serums_drank? profileData.experimentation.serums_drank : 0;
-    const jyrre = profileData.winter_player_data? profileData.winter_player_data : 0;
+    const jyrre = profileData.winter_player_data? profileData.winter_player_data.refined_jyrre_uses : 0;
     const profileCreated = profileData.profile.first_join? new Date(profileData.profile.first_join).toLocaleDateString('en-US', {day: 'numeric', month: 'long', year: 'numeric'}) : 'Unknown';
     const deathCount = profileData.player_data.death_count? profileData.player_data.death_count : 0;
     const soulflowCount = profileData.item_data? profileData.item_data.soulflow : 0;

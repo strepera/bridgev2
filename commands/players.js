@@ -10,7 +10,7 @@ const readability = {
 }
 
 export default async function(bot, requestedPlayer, player, chat) {
-    const response = await fetch(`https://api.hypixel.net/v2/counts?key=${process.env.apiKey}`);
+    const response = await fetch(`https://api.hypixel.net/v2/counts?key=${process.env.API_KEY}`);
     const json = await response.json();
     if (json.success != true) return;
     let message = [];

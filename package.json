@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "mathjs": "^13.2.0",
     "mineflayer": "^4.23.0",
     "skyhelper-networth": "^1.26.0",

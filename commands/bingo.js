@@ -4,7 +4,7 @@ export default async function(bot, requestedPlayer, player, chat) {
     const uuidJson = await uuidResponse.json();
     const uuid = uuidJson.id;
     requestedPlayer = uuidJson.name;
-    const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/bingo?key=${process.env.apiKey}&uuid=${uuid}`);
+    const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/bingo?key=${process.env.API_KEY}&uuid=${uuid}`);
     const dataJson = await dataResponse.json();
     if (!dataJson.success) return (chat + "Invalid player.");
     if (!dataJson.events) return (chat + "Player hasn't played bingo.");

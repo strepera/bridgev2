@@ -8,12 +8,10 @@ function formatNumber(num) {
 }
 
 async function getNetworth(bot, requestedPlayer, player, chat) {
-  let uuid;
-  try {
   const response1 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
   const json1 = await response1.json();
-  uuid = json1.id;
-  const response2 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
+  const uuid = json1.id;
+  const response2 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.API_KEY}&uuid=${uuid}`);
   const json2 = await response2.json();
   if (json2.success === true && json2.profiles !== null) {
     let selectedProfileId;
@@ -28,7 +26,7 @@ async function getNetworth(bot, requestedPlayer, player, chat) {
       }
     }
     if (selectedProfileId === undefined) return
-    const museumResponse = await fetch(`https://api.hypixel.net/v2/skyblock/museum?key=${process.env.apiKey}&uuid=${uuid}&profile=${selectedProfileId}`);
+    const museumResponse = await fetch(`https://api.hypixel.net/v2/skyblock/museum?key=${process.env.API_KEY}&uuid=${uuid}&profile=${selectedProfileId}`);
     const museumJson = await museumResponse.json();
     const museumData = museumJson.members[uuid];
     const longNetworthObj = await skyhelper.getNetworth(profileData, bankBalance, { v2Endpoint: true, cache: false, onlyNetworth: false, museumData});
@@ -51,9 +49,6 @@ async function getNetworth(bot, requestedPlayer, player, chat) {
   }
   else {
     return (chat + "Invalid user " + requestedPlayer);
-  }
-  } catch (error) {
-  console.error('Error:', error);
   }
 }
 

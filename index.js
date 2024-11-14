@@ -2,6 +2,9 @@ import { WebSocketServer } from "ws";
 
 const wss = new WebSocketServer({ port: 3000 });
 
+import dotenv from 'dotenv';
+dotenv.config({ path: './.env'});
+
 console.log('Ready!');
 
 const clients = {};
@@ -39,7 +42,7 @@ class Client {
         this.ip = ip;
         this.uuid = uuid;
 
-        this.ws.on('message', (data) => {
+        this.ws.on('message', async (data) => {
             const json = JSON.parse(data);
             if (!this.identified && json?.type != 'init') {
                 ws.close();
@@ -89,14 +92,14 @@ class Client {
 
                 case "command":
                     console.log('\x1b[33;1m[Command]\x1b[0m ' + json.player + ': ' + json.command + ' ' + json.args);
+                    let name = json.command;
+                    if (aliases[name]) name = aliases[name];
+                    const module = await import(`./commands/${name}.js`).catch(e => console.error('Unknown command: ' + json.command));
+                    const func = module.default || module;
+                    if (!func) return;
+                    const result = await func(null, json.args, json.player, '');
+                    if (!result) return;
                     Object.entries(clients).forEach(async (arr) => {
-                        let name = json.command;
-                        if (aliases[name]) name = aliases[name];
-                        const module = await import(`./commands/${name}.js`);
-                        const func = module.default || module;
-                        if (!func) return;
-                        const result = await func(null, json.args, json.player, '');
-                        if (!result) return;
                         arr[1].chat(json.player, result.substring(0, 240), this.guild);
                     })
                     break;
