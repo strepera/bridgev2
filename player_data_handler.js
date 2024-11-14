@@ -18,8 +18,8 @@ const Data = {
     },
 
     init: async () => {
-        this.playerData = await fs.promises.readFile('./player_data.json');
-        this.stockPrices = await fs.promises.readFile('./stock_prices.json');
+        this.playerData = await fs.readFile('./player_data.json');
+        this.stockPrices = await fs.readFile('./stock_prices.json');
         setInterval(() => {
             fs.writeFile('./player_data.json', JSON.stringify(this.playerData));
             fs.writeFile('./player_data.json', JSON.stringify(this.stockPrices));
