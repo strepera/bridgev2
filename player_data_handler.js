@@ -4,7 +4,7 @@ const ranRange = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export default Data = {
+const Data = {
 
     _checkPlayerExists: (name) => {
         if (!this.playerData[playerName.toLowerCase()]) {
@@ -26,8 +26,8 @@ export default Data = {
         }, 2*60*1000);
         setInterval(() => {
             for (const stock in this.stockPrices) {
-                const difference = stocks[stock].value / 100 * ranRange(-5.3, 5.5);
-                stocks[stock].value = Math.floor(stocks[stock].value + difference);
+                const difference = this.stockPrices[stock].value / 100 * ranRange(-5.3, 5.5);
+                this.stockPrices[stock].value = Math.floor(this.stockPrices[stock].value + difference);
             }
         }, 60*60*1000);
     },
@@ -54,7 +54,6 @@ export default Data = {
                 break;
             default: 
                 throw new Error('Invalid player data type received');
-                break;
         }
 
         return this.playerData[playerName];
@@ -65,3 +64,5 @@ export default Data = {
         return this.stockPrices;
     }
 }
+
+export default Data;
