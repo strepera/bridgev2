@@ -25,7 +25,7 @@ const Data = {
         Data.stockPrices = JSON.parse((await fs.promises.readFile('./stock_prices.json')).toString());
         setInterval(() => {
             fs.writeFileSync('./player_data.json', JSON.stringify(Data.playerData));
-            fs.writeFileSync('./player_data.json', JSON.stringify(Data.stockPrices));
+            fs.writeFileSync('./stock_prices.json', JSON.stringify(Data.stockPrices));
         }, 2*60*1000);
         setInterval(() => {
             for (const stock in Data.stockPrices) {
