@@ -1,0 +1,50 @@
+{
+    "SnailInc": {
+        "price": 1000,
+        "ownership": {
+            "none": 50
+        }
+    },
+    "ShotCoin": {
+        "price": 1000,
+        "ownership": {
+            "none": 50
+        }
+    },
+    "SnakeCoin": {
+        "price": 1000,
+        "ownership": {
+            "none": 50
+        }
+    },
+    "SBCorp": {
+        "price": 1000,
+        "ownership": {
+            "none": 50
+        }
+    },
+    "WWLTT": {
+        "price": 1000,
+        "ownership": {
+            "none": 50
+        }
+    },
+    "FartCoin": {
+        "price": 1000,
+        "ownership": {
+            "none": 50
+        }
+    },
+    "BadInvestment": {
+        "price": 1000,
+        "ownership": {
+            "none": 50
+        }
+    },
+    "SigmaCoin": {
+        "price": 1000,
+        "ownership": {
+            "none": 50
+        }
+    }
+}

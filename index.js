@@ -1,11 +1,9 @@
-import { WebSocketServer } from "ws";
-
-const wss = new WebSocketServer({ port: 3000 });
-
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env'});
-
-console.log('Ready!');
+import { WebSocketServer } from "ws";
+const wss = new WebSocketServer({ port: 3000 });
+import Data from './player_data_handler.js';
+Data.init();
 
 const clients = {};
 
@@ -91,6 +89,23 @@ class Client {
                     break;
 
                 case "command":
+
+                    const aliases = {
+                        'nw': 'networth',
+                        'speed': 'speeds',
+                        'spd': 'speeds',
+                        'plrs': 'players',
+                        'i': 'info',
+                        'd': 'dice',
+                        'dono': 'donate',
+                        'pay': 'donate',
+                        'stocks': 'stock',
+                        'lb': 'leaderboard',
+                        'skill': 'skills',
+                        'rep': 'reputation',
+                        'lbin': 'lowestbin'
+                    };
+
                     console.log('\x1b[33;1m[Command]\x1b[0m ' + json.player + ': ' + json.command + ' ' + json.args);
                     let name = json.command;
                     if (aliases[name]) name = aliases[name];
@@ -122,19 +137,3 @@ class Client {
     }
 
 }
-
-const aliases = {
-    'nw': 'networth',
-    'speed': 'speeds',
-    'spd': 'speeds',
-    'plrs': 'players',
-    'i': 'info',
-    'd': 'dice',
-    'dono': 'donate',
-    'pay': 'donate',
-    'stocks': 'stock',
-    'lb': 'leaderboard',
-    'skill': 'skills',
-    'rep': 'reputation',
-    'lbin': 'lowestbin'
-};

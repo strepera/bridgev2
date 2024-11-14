@@ -1,4 +1,5 @@
 import fs from 'fs';
+import Data from '../player_data_handler.js';
 
 export default async function(bot, requestedPlayer, player, chat) {
     const payment = Number(requestedPlayer.split(' ')[1]);
@@ -9,30 +10,19 @@ export default async function(bot, requestedPlayer, player, chat) {
     if (requestedPlayer.trim() == '') {
         return (chat + 'You need to pick a player to donate to! e.g. ".donate snailify 100"');
     }
-    const playerData = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
-    const playerJson = JSON.parse(playerData);
 
-    const requestData = await fs.promises.readFile(`bot/playerData/${requestedPlayer.toLowerCase()}.json`, 'utf8').catch(() => console.error(''));
-    if (!requestData) return chat + 'Invalid player.';
-    const requestedJson = JSON.parse(requestData);
-
-    const playerObj = playerJson[player.toLowerCase()];
-    const requestedPlayerObj = requestedJson[requestedPlayer.toLowerCase()];
+    const initiatingPlayerData = Data.get(player);
+    const requestedPlayerData = Data.get(requestedPlayer);
+    if (!Data.get(requestedPlayer)) return chat + 'Invalid player.';
     
-    if (payment > playerObj.coins) {
+    if (payment > initiatingPlayerData.coins) {
       return (chat + 'You cannot donate more coins than you have!');
     }
     if (payment < 0) return chat + 'You cannot donate negative coins.';
     if (requestedPlayer.toLowerCase() == player.toLowerCase()) return 'You cannot donate to yourself!';
   
-    playerObj.coins -= Math.floor(payment);
-    requestedPlayerObj.coins += Math.floor(payment);
-
-    playerJson[player.toLowerCase()] = playerObj;
-    requestedJson[requestedPlayer.toLowerCase()] = requestedPlayerObj;
-
-    fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(playerJson, null, 2));
-    fs.writeFileSync(`bot/playerData/${requestedPlayer.toLowerCase()}.json`, JSON.stringify(requestedJson, null, 2));
+    Data.add(player, 'coins', Math.floor(payment) *-1);
+    Data.add(requestedPlayer, 'coins', Math.floor(payment));
   
     return (chat + 'You donated $' + payment + ' to ' + requestedPlayerObj.username + '.');
 }

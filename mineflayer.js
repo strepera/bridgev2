@@ -3,6 +3,11 @@ import WebSocket from 'ws';
 
 export const makeMineflayerBot = (username, guild) => {
 
+    let readingGuildOnlineMessage = false;
+    let onlineMessageArray = [];
+
+    const players = [];
+
     let ws = new WebSocket('ws://192.168.1.114:3000');
     
     ws.on('open', () => {
@@ -75,9 +80,34 @@ export const makeMineflayerBot = (username, guild) => {
                 type: 'playerListChange',
                 player: match[1],
                 difference: match[2] == 'joined.'? 1 : -1,
-                players: []
+                players: players
             }))
         }
+        else if (match = msg.match(/^Guild Name: (.+)/)) {
+            readingGuildOnlineMessage = true;
+            onlineMessageArray = [];
+        }
+        else if (readingGuildOnlineMessage) {
+            if (msg.includes('-') || msg.includes('Total Members') || msg.includes('Online Members')) return;
+            if (msg.match(/^Offline Members: \d+/)) {
+                readingGuildOnlineMessage = false;
+                players = onlineMessageArray.join(" ").match(/(?:\[\S+\] )?(\S+)/g);
+                ws.send(JSON.stringify({
+                    type: 'playerListChange',
+                    player: bot.username,
+                    difference: players.length,
+                    players: players
+                }))
+                return;
+            }
+            onlineMessageArray.push(msg.replaceAll('●', ' '));
+        }
     })
+
+    bot.on('kicked', ws.close);
+    bot.on('error', ws.close);
+    bot.on('end', ws.close);
+
+    return bot;
     
 }

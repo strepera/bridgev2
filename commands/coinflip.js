@@ -1,4 +1,5 @@
 import fs from 'fs';
+import Data from '../player_data_handler.js';
 
 export default async function(bot, bet, player, chat) {
   const side = bet.split(' ')[1];
@@ -12,9 +13,6 @@ export default async function(bot, bet, player, chat) {
   if (Number(bet) < 100 || Number(bet) < 0) {
     return (chat + 'You need to bet at least 100 coins!');
   }
-  const data = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
-  let json = JSON.parse(data);
-  const playerObj = json[player.toLowerCase()];
   if (Number(bet) > playerObj.coins) {
     return (chat + 'You cannot bet more coins than you have!');
   }
@@ -33,9 +31,7 @@ export default async function(bot, bet, player, chat) {
     return (chat + 'Pick heads or tails!');
   }
 
-  playerObj.coins += Math.floor(reward);
-  json[player.toLowerCase()] = playerObj;
-  fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
+  Data.add(player, 'coins', Math.floor(reward));
 
   if (reward > 0) reward = '+' + reward;
   return (chat + 'The coin flipped ' + coin + '. You chose ' + side + ' (' + reward + ')');

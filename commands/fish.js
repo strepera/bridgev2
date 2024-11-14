@@ -1,4 +1,5 @@
 import fs from 'fs';
+import Data from '../player_data_handler.js';
 
 const cooldowns = {};
 
@@ -73,12 +74,7 @@ export default async function fish(bot, request, player, chat) {
         bot.lastMessage = ("/t " + player + " You caught: " + message.join(' '));
     }, 1000);
 
-    const data = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
-    const json = JSON.parse(data);
-    const playerObj = json[player.toLowerCase()];
-    playerObj.coins += total;
-
-    fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
+    Data.add(player, 'coins', total);
 
     return (chat + "Fished " + fishAmount + ' times!');
 }
