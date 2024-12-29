@@ -1,10 +1,27 @@
 import mineflayer from 'mineflayer';
 import WebSocket from 'ws';
 
-export const makeMineflayerBot = (username, guild, login) => {
+const generateRandomNonNumericString = (length) => {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+export const makeMineflayerBot = (username, guild, login, prefix) => {
+
+    const chat = (msg) => {
+        bot.chat(msg);
+        lastMessage = msg;
+    }
 
     let readingGuildOnlineMessage = false;
     let onlineMessageArray = [];
+
+    let lastMessage = "";
 
     let players = [];
 
@@ -17,7 +34,8 @@ export const makeMineflayerBot = (username, guild, login) => {
             ws.send(JSON.stringify({
                 type: 'init',
                 guild: guild,
-                username: username
+                username: username,
+                prefix: prefix
             }))
         })
     
@@ -30,8 +48,15 @@ export const makeMineflayerBot = (username, guild, login) => {
             const json = JSON.parse(data);
             switch (json.type) {
                 case "chat":
-                    bot.chat("/gc " + json.player + " : " + json.message);
+                    chat(`/gc [${json.prefix}] ${json.player} : ${json.message}`);
                     break;
+                case "playerListChange":
+                    chat(`/gc [${json.prefix}] ${json.player} ${json.difference > 0? 'joined' : 'left'}. (${json.players.length}/?)`);
+                    break;
+                case "mute":
+                    chat(`/g mute ${json.player} ${Math.floor(json.duration/60)}m`);
+                case "say":
+                    chat(json.message);
                 default:
                     break;
             }
@@ -49,7 +74,9 @@ export const makeMineflayerBot = (username, guild, login) => {
     
     bot.once('login', () => {
         console.log('Joined as ' + bot.username);
-        bot.chat('/g online');
+        setTimeout(() => {
+            bot.chat('/g online');
+        }, 5*1000);
         for (let i = 0; i < 15; i++) {
             bot.chat("/"); // send self to limbo
         }
@@ -62,6 +89,9 @@ export const makeMineflayerBot = (username, guild, login) => {
     bot.on('messagestr', (msg) => {
         let match;
         let match2;
+        if (msg == 'You cannot say the same message twice!' || msg == 'You are sending commands too fast! Please slow down.' || msg == 'You can only send a message once every half second!') {
+            chat(lastMessage + " " + generateRandomNonNumericString(6));
+        }
         if (match = msg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
             if (match[2] == bot.username) return;
             if (match2 = match[4].match(/^\.(\S+)(?: (.+))?/)) {
@@ -74,6 +104,7 @@ export const makeMineflayerBot = (username, guild, login) => {
                     args
                 }))
             }
+            if (!players.includes(match[2])) players.push(match[2]);
             ws.send(JSON.stringify({
                 type: 'chat',
                 player: match[2],
@@ -81,6 +112,12 @@ export const makeMineflayerBot = (username, guild, login) => {
             }))
         }
         else if (match = msg.match(/^Guild > (\S+) (joined.|left.)/)) {
+            if (match[2] == 'joined.') {
+                players.push(match[1])
+            }
+            else {
+                players = players.filter(p => p !== match[1]);
+            }
             ws.send(JSON.stringify({
                 type: 'playerListChange',
                 player: match[1],
